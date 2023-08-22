@@ -8,7 +8,6 @@
   "gitHubRunner": "ubuntu-latest",
   "DeployToPROD2": {
     "ContinuousDeployment": true,
-    "Projects": "Common,Misc",
     "Branches": [ "main" ]
   },
   "DeployToXQA": {
