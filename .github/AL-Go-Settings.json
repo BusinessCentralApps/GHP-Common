@@ -5,5 +5,9 @@
   "useCompilerFolder": true,
   "doNotPublishApps": true,
   "runs-on": "ubuntu-latest",
-  "gitHubRunner": "ubuntu-latest"
+  "gitHubRunner": "ubuntu-latest",
+  "DeployToPROD": {
+    "ContinuousDeployment": true,
+    "Branches": [ "main" ]
+  }
 }
