@@ -3,5 +3,6 @@
   "appFolders": [],
   "testFolders": [],
   "bcptTestFolders": [],
-  "repoVersion": "2.0"
+  "repoVersion": "2.0",
+  "artifact": "https://bcartifacts.blob.core.windows.net/sandbox/22.4.59114.59904/us"
 }
