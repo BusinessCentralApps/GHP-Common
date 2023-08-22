@@ -26,7 +26,7 @@ permissions:
 
 defaults:
   run:
-    shell: powershell
+    shell: pwsh
 
 env:
   ALGoOrgSettings: ${{ vars.ALGoOrgSettings }}
@@ -34,30 +34,30 @@ env:
 
 jobs:
   AddExistingAppOrTestApp:
-    runs-on: [ windows-latest ]
+    runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Initialize the workflow
         id: init
-        uses: freddydk/AL-Go/Actions/WorkflowInitialize@ApiVersion
+        uses: freddydk/AL-Go/Actions/WorkflowInitialize@enverr
         with:
-          shell: powershell
+          shell: pwsh
           eventId: "DO0090"
 
       - name: Read settings
-        uses: freddydk/AL-Go/Actions/ReadSettings@ApiVersion
+        uses: freddydk/AL-Go/Actions/ReadSettings@enverr
         if: github.event.inputs.useGhTokenWorkflow == 'true'
         with:
-          shell: powershell
+          shell: pwsh
           parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
 
       - name: Read secrets
-        uses: freddydk/AL-Go/Actions/ReadSecrets@ApiVersion
+        uses: freddydk/AL-Go/Actions/ReadSecrets@enverr
         if: github.event.inputs.useGhTokenWorkflow == 'true'
         with:
-          shell: powershell
+          shell: pwsh
           parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
           gitHubSecrets: ${{ toJson(secrets) }}
           getSecrets: 'ghTokenWorkflow'
@@ -80,9 +80,9 @@ jobs:
           Add-Content -Encoding UTF8 -Path $env:GITHUB_OUTPUT -Value "ghToken=$ghToken"
 
       - name: Add existing app
-        uses: freddydk/AL-Go/Actions/AddExistingApp@ApiVersion
+        uses: freddydk/AL-Go/Actions/AddExistingApp@enverr
         with:
-          shell: powershell
+          shell: pwsh
           token: ${{ steps.CalculateToken.outputs.ghToken }}
           parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
           project: ${{ github.event.inputs.project }}
@@ -91,8 +91,8 @@ jobs:
 
       - name: Finalize the workflow
         if: always()
-        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@ApiVersion
+        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@enverr
         with:
-          shell: powershell
+          shell: pwsh
           eventId: "DO0090"
           telemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
