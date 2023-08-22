@@ -8,12 +8,16 @@
   "gitHubRunner": "ubuntu-latest",
   "DeployToPROD2": {
     "ContinuousDeployment": true,
-    "Branches": [ "main" ]
+    "Branches": [
+      "main"
+    ]
   },
   "DeployToXQA": {
     "EnvironmentName": "MyQA",
     "ContinuousDeployment": true,
-    "Branches": [ "branch", "main" ]
+    "Branches": [
+      "branch",
+      "main"
+    ]
   }
-
 }
