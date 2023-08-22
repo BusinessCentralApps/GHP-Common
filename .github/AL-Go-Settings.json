@@ -11,6 +11,7 @@
     "Branches": [ "main" ]
   },
   "DeployToXQA": {
+    "EnvironmentName": "MyQA",
     "ContinuousDeployment": true,
     "Branches": [ "branch", "main" ]
   }
