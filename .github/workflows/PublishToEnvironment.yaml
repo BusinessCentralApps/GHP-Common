@@ -17,7 +17,7 @@ permissions:
 
 defaults:
   run:
-    shell: powershell
+    shell: pwsh
 
 env:
   ALGoOrgSettings: ${{ vars.ALGoOrgSettings }}
@@ -25,7 +25,7 @@ env:
 
 jobs:
   Initialization:
-    runs-on: [ windows-latest ]
+    runs-on: [ ubuntu-latest ]
     outputs:
       telemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
       environments: ${{ steps.ReadSettings.outputs.EnvironmentsJson }}
@@ -38,16 +38,16 @@ jobs:
 
       - name: Initialize the workflow
         id: init
-        uses: freddydk/AL-Go/Actions/WorkflowInitialize@ApiVersion
+        uses: freddydk/AL-Go/Actions/WorkflowInitialize@enverr
         with:
-          shell: powershell
+          shell: pwsh
           eventId: "DO0097"
 
       - name: Read settings
         id: ReadSettings
-        uses: freddydk/AL-Go/Actions/ReadSettings@ApiVersion
+        uses: freddydk/AL-Go/Actions/ReadSettings@enverr
         with:
-          shell: powershell
+          shell: pwsh
           parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
           getEnvironments: ${{ github.event.inputs.environmentName }}
           includeProduction: 'Y'
@@ -61,10 +61,10 @@ jobs:
           Add-Content -Encoding UTF8 -Path $env:GITHUB_OUTPUT -Value "envName=$envName"
 
       - name: Read secrets
-        uses: freddydk/AL-Go/Actions/ReadSecrets@ApiVersion
+        uses: freddydk/AL-Go/Actions/ReadSecrets@enverr
         if: steps.ReadSettings.outputs.UnknownEnvironment == 1
         with:
-          shell: powershell
+          shell: pwsh
           parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
           gitHubSecrets: ${{ toJson(secrets) }}
           getSecrets: '${{ steps.envName.outputs.envName }}-AuthContext,${{ steps.envName.outputs.envName }}_AuthContext,AuthContext'
@@ -94,7 +94,7 @@ jobs:
             Write-Host "No AuthContext provided for $envName, initiating Device Code flow"
             $ALGoHelperPath = "$([System.IO.Path]::GetTempFileName()).ps1"
             $webClient = New-Object System.Net.WebClient
-            $webClient.DownloadFile('https://raw.githubusercontent.com/freddydk/AL-Go/ApiVersion/Actions/AL-Go-Helper.ps1', $ALGoHelperPath)
+            $webClient.DownloadFile('https://raw.githubusercontent.com/freddydk/AL-Go/enverr/Actions/AL-Go-Helper.ps1', $ALGoHelperPath)
             . $ALGoHelperPath
             $BcContainerHelperPath = DownloadAndImportBcContainerHelper -baseFolder $ENV:GITHUB_WORKSPACE
             $authContext = New-BcAuthContext -includeDeviceLogin -deviceLoginTimeout ([TimeSpan]::FromSeconds(0))
@@ -125,16 +125,16 @@ jobs:
           Add-Content -Encoding UTF8 -Path $env:GITHUB_OUTPUT -Value "envName=$envName"
 
       - name: Read settings
-        uses: freddydk/AL-Go/Actions/ReadSettings@ApiVersion
+        uses: freddydk/AL-Go/Actions/ReadSettings@enverr
         with:
-          shell: powershell
+          shell: pwsh
 
       - name: Read secrets
-        uses: freddydk/AL-Go/Actions/ReadSecrets@ApiVersion
+        uses: freddydk/AL-Go/Actions/ReadSecrets@enverr
         with:
-          shell: powershell
+          shell: pwsh
           gitHubSecrets: ${{ toJson(secrets) }}
-          secrets: '${{ steps.envName.outputs.envName }}-AuthContext,${{ steps.envName.outputs.envName }}_AuthContext,AuthContext,${{ steps.envName.outputs.envName }}-EnvironmentName,${{ steps.envName.outputs.envName }}_EnvironmentName,EnvironmentName,projects'
+          getSecrets: '${{ steps.envName.outputs.envName }}-AuthContext,${{ steps.envName.outputs.envName }}_AuthContext,AuthContext,${{ steps.envName.outputs.envName }}-EnvironmentName,${{ steps.envName.outputs.envName }}_EnvironmentName,EnvironmentName,projects'
 
       - name: AuthContext
         id: authContext
@@ -215,11 +215,11 @@ jobs:
           Write-Host "projects=$projects"
 
       - name: Deploy
-        uses: freddydk/AL-Go/Actions/Deploy@ApiVersion
+        uses: freddydk/AL-Go/Actions/Deploy@enverr
         env:
           AuthContext: ${{ steps.authContext.outputs.authContext }}
         with:
-          shell: powershell
+          shell: pwsh
           parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
           type: 'Publish'
           projects: ${{ steps.authContext.outputs.projects }}
@@ -228,7 +228,7 @@ jobs:
 
   PostProcess:
     if: always()
-    runs-on: [ windows-latest ]
+    runs-on: [ ubuntu-latest ]
     needs: [ Initialization, Deploy ]
     steps:
       - name: Checkout
@@ -236,8 +236,8 @@ jobs:
 
       - name: Finalize the workflow
         id: PostProcess
-        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@ApiVersion
+        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@enverr
         with:
-          shell: powershell
+          shell: pwsh
           eventId: "DO0097"
           telemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
