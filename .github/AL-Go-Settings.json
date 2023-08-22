@@ -9,5 +9,10 @@
   "DeployToPROD2": {
     "ContinuousDeployment": true,
     "Branches": [ "main" ]
+  },
+  "DeployToXQA": {
+    "ContinuousDeployment": true,
+    "Branches": [ "branch", "main" ]
   }
+
 }
