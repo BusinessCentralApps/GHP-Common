@@ -5,19 +5,5 @@
   "useCompilerFolder": true,
   "doNotPublishApps": true,
   "runs-on": "ubuntu-latest",
-  "gitHubRunner": "ubuntu-latest",
-  "DeployToPROD2": {
-    "ContinuousDeployment": true,
-    "Branches": [
-      "main"
-    ]
-  },
-  "DeployToXQA": {
-    "EnvironmentName": "MyQA",
-    "ContinuousDeployment": true,
-    "Branches": [
-      "branch",
-      "main"
-    ]
-  }
+  "gitHubRunner": "ubuntu-latest"
 }
