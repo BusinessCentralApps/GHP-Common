@@ -53,7 +53,7 @@ defaults:
 env:
   ALGoOrgSettings: ${{ vars.ALGoOrgSettings }}
   ALGoRepoSettings: ${{ vars.ALGoRepoSettings }}
-  useGhTokenWorkflowForCommits: ${{ github.event.inputs.useGhTokenWorkflow }}
+  UseGhTokenWorkflowForCommits: ${{ github.event.inputs.useGhTokenWorkflow }}
 
 jobs:
   CreateRelease:
@@ -80,7 +80,6 @@ jobs:
         uses: freddydk/AL-Go/Actions/ReadSettings@Secrets2
         with:
           shell: pwsh
-          parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
           get: templateUrl,repoName
 
       - name: Determine Projects
@@ -221,7 +220,6 @@ jobs:
         uses: freddydk/AL-Go/Actions/ReadSettings@Secrets2
         with:
           shell: pwsh
-          parentTelemetryScopeJson: ${{ needs.CreateRelease.outputs.telemetryScopeJson }}
 
       - name: Read secrets
         id: ReadSecrets
@@ -313,10 +311,8 @@ jobs:
     steps:
       - name: Read settings
         uses: freddydk/AL-Go/Actions/ReadSettings@Secrets2
-        if: github.event.inputs.useGhTokenWorkflow == 'true'
         with:
           shell: pwsh
-          parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
 
       - name: Read secrets
         id: ReadSecrets

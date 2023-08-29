@@ -44,7 +44,6 @@ jobs:
         uses: freddydk/AL-Go/Actions/ReadSettings@Secrets2
         with:
           shell: pwsh
-          parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
 
       - name: Determine Workflow Depth
         id: DetermineWorkflowDepth

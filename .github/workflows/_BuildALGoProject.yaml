@@ -81,7 +81,6 @@ jobs:
           uses: freddydk/AL-Go/Actions/ReadSettings@Secrets2
           with:
             shell: ${{ inputs.shell }}
-            parentTelemetryScopeJson: ${{ inputs.parentTelemetryScopeJson }}
             project: ${{ inputs.project }}
             get: useCompilerFolder,keyVaultCodesignCertificateName,doNotSignApps,artifact
 

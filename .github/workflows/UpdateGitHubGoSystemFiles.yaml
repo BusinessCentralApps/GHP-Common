@@ -41,7 +41,6 @@ jobs:
         uses: freddydk/AL-Go/Actions/ReadSettings@Secrets2
         with:
           shell: powershell
-          parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
           get: templateUrl
 
       - name: Read secrets

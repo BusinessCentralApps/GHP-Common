@@ -35,7 +35,7 @@ defaults:
 env:
   ALGoOrgSettings: ${{ vars.ALGoOrgSettings }}
   ALGoRepoSettings: ${{ vars.ALGoRepoSettings }}
-  useGhTokenWorkflowForCommits: ${{ github.event.inputs.useGhTokenWorkflow }}
+  UseGhTokenWorkflowForCommits: ${{ github.event.inputs.useGhTokenWorkflow }}
 
 jobs:
   Initialization:
@@ -61,7 +61,6 @@ jobs:
         uses: freddydk/AL-Go/Actions/ReadSettings@Secrets2
         with:
           shell: pwsh
-          parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
 
       - name: Read secrets
         id: ReadSecrets
@@ -109,7 +108,6 @@ jobs:
         uses: freddydk/AL-Go/Actions/ReadSettings@Secrets2
         with:
           shell: pwsh
-          parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
 
       - name: Read secrets
         id: ReadSecrets
