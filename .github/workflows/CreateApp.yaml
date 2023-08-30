@@ -68,7 +68,7 @@ jobs:
         with:
           shell: pwsh
           gitHubSecrets: ${{ toJson(secrets) }}
-          getSecrets: SomeSecret,${{ github.event.inputs.useGhTokenWorkflow && 'ghTokenWorkflow' || 'github_token' }}
+          getSecrets: SomeSecret,${{ github.event.inputs.useGhTokenWorkflow == 'true' && 'ghTokenWorkflow' || 'github_token' }}
 
       - name: Creating a new app
         uses: freddydk/AL-Go/Actions/CreateApp@Secrets2
