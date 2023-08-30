@@ -98,6 +98,8 @@ jobs:
       - name: Determine Deployment Environments
         id: DetermineDeploymentEnvironments
         uses: freddydk/AL-Go/Actions/DetermineDeploymentEnvironments@Secrets2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         with:
           shell: pwsh
           getEnvironments: '*'
