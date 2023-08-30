@@ -76,12 +76,12 @@ jobs:
         uses: freddydk/AL-Go/Actions/CreateApp@Secrets2
         with:
           shell: pwsh
-          token: fromJson(steps.ReadSecrets.outputs.Secrets)."${{ env.TokenForCommits }}"
+          token: ${{ fromJson(steps.ReadSecrets.outputs.Secrets)."${{ env.TokenForCommits }}" }}
           parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
-          project: github.event.inputs.project
-          type: env.type
-          name: github.event.inputs.name
-          publisher: github.event.inputs.publisher
+          project: ${{ github.event.inputs.project }}
+          type: ${{ env.type }}
+          name: ${{ github.event.inputs.name }}
+          publisher: ${{ github.event.inputs.publisher }}
           idrange: ${{ github.event.inputs.idrange }}
           sampleCode: ${{ github.event.inputs.sampleCode }}
           directCommit: ${{ github.event.inputs.directCommit }}
