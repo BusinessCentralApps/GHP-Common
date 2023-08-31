@@ -114,8 +114,8 @@ jobs:
         with:
           shell: pwsh
           gitHubSecrets: ${{ toJson(secrets) }}
-          getSecrets: 'adminCenterApiCredentials,TokenForCommits'
-          useGhTokenWorkflowForCommits: '${{ github.event.inputs.useGhTokenWorkflow }}'
+          getSecrets: 'adminCenterApiCredentials,TokenForPush'
+          useGhTokenWorkflowForPush: '${{ github.event.inputs.useGhTokenWorkflow }}'
 
       - name: Set AdminCenterApiCredentials
         id: SetAdminCenterApiCredentials
@@ -132,7 +132,7 @@ jobs:
         uses: freddydk/AL-Go/Actions/CreateDevelopmentEnvironment@Secrets2
         with:
           shell: pwsh
-          token: ${{ steps.ReadSecrets.outputs.TokenForCommits }}
+          token: ${{ steps.ReadSecrets.outputs.TokenForPush }}
           parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
           environmentName: ${{ github.event.inputs.environmentName }}
           project: ${{ github.event.inputs.project }}
