@@ -34,16 +34,17 @@ jobs:
 
       - name: Initialize the workflow
         id: init
-        uses: freddydk/AL-Go/Actions/WorkflowInitialize@Secrets2
+        uses: freddydk/AL-Go/Actions/WorkflowInitialize@v3.2hotfix
         with:
           shell: pwsh
           eventId: "DO0099"
 
       - name: Read settings
         id: ReadSettings
-        uses: freddydk/AL-Go/Actions/ReadSettings@Secrets2
+        uses: freddydk/AL-Go/Actions/ReadSettings@v3.2hotfix
         with:
           shell: pwsh
+          parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
       
       - name: Determine Workflow Depth
         id: DetermineWorkflowDepth
@@ -52,7 +53,7 @@ jobs:
           
       - name: Determine Projects To Build
         id: determineProjectsToBuild
-        uses: freddydk/AL-Go/Actions/DetermineProjectsToBuild@Secrets2
+        uses: freddydk/AL-Go/Actions/DetermineProjectsToBuild@v3.2hotfix
         with:
           shell: pwsh
           maxBuildDepth: ${{ env.workflowDepth }}
@@ -88,7 +89,7 @@ jobs:
 
       - name: Finalize the workflow
         id: PostProcess
-        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@Secrets2
+        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@v3.2hotfix
         with:
           shell: pwsh
           eventId: "DO0099"
