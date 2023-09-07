@@ -1,6 +1,6 @@
 {
   "type": "PTE",
-  "templateUrl": "https://github.com/freddydk/AL-Go@PSScriptAnalyzer",
+  "templateUrl": "https://github.com/microsoft/AL-Go-PTE@preview",
   "DoNotUseCdnForArtifacts": true,
   "useCompilerFolder": true,
   "doNotPublishApps": true,
