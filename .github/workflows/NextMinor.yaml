@@ -34,14 +34,14 @@ jobs:
 
       - name: Initialize the workflow
         id: init
-        uses: freddydk/AL-Go/Actions/WorkflowInitialize@issue697
+        uses: microsoft/AL-Go/Actions/WorkflowInitialize@13989cd251c3eddc64f3603248f6148619ecd88e
         with:
           shell: pwsh
           eventId: "DO0100"
 
       - name: Read settings
         id: ReadSettings
-        uses: freddydk/AL-Go/Actions/ReadSettings@issue697
+        uses: microsoft/AL-Go/Actions/ReadSettings@13989cd251c3eddc64f3603248f6148619ecd88e
         with:
           shell: pwsh
 
@@ -52,7 +52,7 @@ jobs:
 
       - name: Determine Projects To Build
         id: determineProjectsToBuild
-        uses: freddydk/AL-Go/Actions/DetermineProjectsToBuild@issue697
+        uses: microsoft/AL-Go/Actions/DetermineProjectsToBuild@13989cd251c3eddc64f3603248f6148619ecd88e
         with:
           shell: pwsh
           maxBuildDepth: ${{ env.workflowDepth }}
@@ -89,7 +89,7 @@ jobs:
 
       - name: Finalize the workflow
         id: PostProcess
-        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@issue697
+        uses: microsoft/AL-Go/Actions/WorkflowPostProcess@13989cd251c3eddc64f3603248f6148619ecd88e
         with:
           shell: pwsh
           eventId: "DO0100"
