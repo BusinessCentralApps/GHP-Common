@@ -46,6 +46,7 @@ env:
 
 jobs:
   CreateTestApp:
+    needs: [ ]
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout
@@ -53,19 +54,19 @@ jobs:
 
       - name: Initialize the workflow
         id: init
-        uses: microsoft/AL-Go/Actions/WorkflowInitialize@13989cd251c3eddc64f3603248f6148619ecd88e
+        uses: freddydk/AL-Go/Actions/WorkflowInitialize@placeholders
         with:
           shell: pwsh
           eventId: "DO0095"
 
       - name: Read settings
-        uses: microsoft/AL-Go/Actions/ReadSettings@13989cd251c3eddc64f3603248f6148619ecd88e
+        uses: freddydk/AL-Go/Actions/ReadSettings@placeholders
         with:
           shell: pwsh
 
       - name: Read secrets
         id: ReadSecrets
-        uses: microsoft/AL-Go/Actions/ReadSecrets@13989cd251c3eddc64f3603248f6148619ecd88e
+        uses: freddydk/AL-Go/Actions/ReadSecrets@placeholders
         with:
           shell: pwsh
           gitHubSecrets: ${{ toJson(secrets) }}
@@ -73,7 +74,7 @@ jobs:
           useGhTokenWorkflowForPush: '${{ github.event.inputs.useGhTokenWorkflow }}'
 
       - name: Creating a new test app
-        uses: microsoft/AL-Go/Actions/CreateApp@13989cd251c3eddc64f3603248f6148619ecd88e
+        uses: freddydk/AL-Go/Actions/CreateApp@placeholders
         with:
           shell: pwsh
           token: ${{ steps.ReadSecrets.outputs.TokenForPush }}
@@ -88,7 +89,7 @@ jobs:
 
       - name: Finalize the workflow
         if: always()
-        uses: microsoft/AL-Go/Actions/WorkflowPostProcess@13989cd251c3eddc64f3603248f6148619ecd88e
+        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@placeholders
         with:
           shell: pwsh
           eventId: "DO0095"
