@@ -29,7 +29,7 @@ jobs:
     if: (github.event.pull_request.base.repo.full_name != github.event.pull_request.head.repo.full_name) && (github.event_name != 'pull_request')
     runs-on: [ windows-latest ]
     steps:
-      - uses: microsoft/AL-Go/Actions/VerifyPRChanges@13989cd251c3eddc64f3603248f6148619ecd88e
+      - uses: freddydk/AL-Go/Actions/VerifyPRChanges@placeholders
 
   Initialization:
     needs: [ PregateCheck ]
@@ -52,14 +52,14 @@ jobs:
 
       - name: Initialize the workflow
         id: init
-        uses: microsoft/AL-Go/Actions/WorkflowInitialize@13989cd251c3eddc64f3603248f6148619ecd88e
+        uses: freddydk/AL-Go/Actions/WorkflowInitialize@placeholders
         with:
           shell: powershell
           eventId: "DO0104"
 
       - name: Read settings
         id: ReadSettings
-        uses: microsoft/AL-Go/Actions/ReadSettings@13989cd251c3eddc64f3603248f6148619ecd88e
+        uses: freddydk/AL-Go/Actions/ReadSettings@placeholders
         with:
           shell: powershell
 
@@ -70,7 +70,7 @@ jobs:
 
       - name: Determine Projects To Build
         id: determineProjectsToBuild
-        uses: microsoft/AL-Go/Actions/DetermineProjectsToBuild@13989cd251c3eddc64f3603248f6148619ecd88e
+        uses: freddydk/AL-Go/Actions/DetermineProjectsToBuild@placeholders
         with:
           shell: powershell
           maxBuildDepth: ${{ env.workflowDepth }}
@@ -98,14 +98,14 @@ jobs:
       publishThisBuildArtifacts: ${{ needs.Initialization.outputs.workflowDepth > 1 }}
 
   StatusCheck:
-    runs-on: [ windows-latest ]
     needs: [ Initialization, Build ]
     if: (!cancelled())
+    runs-on: [ windows-latest ]
     name: Pull Request Status Check
     steps:
       - name: Pull Request Status Check
         id: PullRequestStatusCheck
-        uses: microsoft/AL-Go/Actions/PullRequestStatusCheck@13989cd251c3eddc64f3603248f6148619ecd88e
+        uses: freddydk/AL-Go/Actions/PullRequestStatusCheck@placeholders
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
