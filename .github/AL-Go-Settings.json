@@ -9,5 +9,6 @@
   "DeployToQA": {
     "ForceSync": true,
     "ContinuousDeployment": true
-  }
+  },
+  "templateSha": "6159ee6509fa4d1a6c597277181047971dba6a77"
 }
