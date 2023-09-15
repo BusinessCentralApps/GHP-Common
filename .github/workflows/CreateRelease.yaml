@@ -104,7 +104,6 @@ jobs:
         uses: freddydk/AL-Go/Actions/CheckForUpdates@placeholders
         with:
           shell: pwsh
-          parentTelemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
           templateUrl: ${{ env.templateUrl }}
           downloadLatest: true
 
