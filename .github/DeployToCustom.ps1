@@ -1,5 +1,5 @@
 Param(
-    [Hashtable]$parameters
+    [Hashtable] $parameters
 )
 
 
