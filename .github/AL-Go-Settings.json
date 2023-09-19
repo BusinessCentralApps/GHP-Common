@@ -7,8 +7,13 @@
   "runs-on": "ubuntu-latest",
   "gitHubRunner": "ubuntu-latest",
   "DeployToQA": {
-    "ForceSync": true,
-    "ContinuousDeployment": true
+    "EnvironmentType": "SaaS",
+    "EnvironmentName": "QA",
+    "Branches": [ "main" ],
+    "Projects": "*",
+    "SyncMode": "ForceSync",
+    "ContinuousDeployment": true,
+    "runs-on": "ubuntu-latest"
   },
   "templateSha": "819a838f22a32491fb81ef2f3abad7280d4375b0"
 }
