@@ -3,5 +3,5 @@ Param(
 )
 
 
-write-Host 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-$parameters | ConvertTo-Json | Out-Host
+write-Host 'Parameters transferred:'
+$parameters | ConvertTo-Json -depth 99 | Out-Host
