@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       templateUrl:
-        description: Template Repository URL (current is https://github.com/freddydk/AL-Go@placeholders)
+        description: Template Repository URL (current is https://github.com/freddydk/AL-Go@custom)
         required: false
         default: ''
       downloadLatest:
@@ -48,20 +48,20 @@ jobs:
 
       - name: Initialize the workflow
         id: init
-        uses: freddydk/AL-Go/Actions/WorkflowInitialize@placeholders
+        uses: freddydk/AL-Go/Actions/WorkflowInitialize@custom
         with:
           shell: powershell
           eventId: "DO0098"
 
       - name: Read settings
-        uses: freddydk/AL-Go/Actions/ReadSettings@placeholders
+        uses: freddydk/AL-Go/Actions/ReadSettings@custom
         with:
           shell: powershell
           get: templateUrl
 
       - name: Read secrets
         id: ReadSecrets
-        uses: freddydk/AL-Go/Actions/ReadSecrets@placeholders
+        uses: freddydk/AL-Go/Actions/ReadSecrets@custom
         with:
           shell: powershell
           gitHubSecrets: ${{ toJson(secrets) }}
@@ -97,7 +97,7 @@ jobs:
           Add-Content -Encoding UTF8 -Path $env:GITHUB_ENV -Value "downloadLatest=$downloadLatest"
 
       - name: Update AL-Go system files
-        uses: freddydk/AL-Go/Actions/CheckForUpdates@placeholders
+        uses: freddydk/AL-Go/Actions/CheckForUpdates@custom
         with:
           shell: powershell
           token: ${{ fromJson(steps.ReadSecrets.outputs.Secrets).ghTokenWorkflow }}
@@ -108,7 +108,7 @@ jobs:
 
       - name: Finalize the workflow
         if: always()
-        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@placeholders
+        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@custom
         with:
           shell: powershell
           eventId: "DO0098"

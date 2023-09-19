@@ -1,6 +1,6 @@
 {
   "type": "PTE",
-  "templateUrl": "https://github.com/freddydk/AL-Go@placeholders",
+  "templateUrl": "https://github.com/freddydk/AL-Go@custom",
   "DoNotUseCdnForArtifacts": true,
   "useCompilerFolder": true,
   "doNotPublishApps": true,
@@ -9,7 +9,9 @@
   "DeployToQA": {
     "EnvironmentType": "SaaS",
     "EnvironmentName": "QA",
-    "Branches": [ "main" ],
+    "Branches": [
+      "main"
+    ],
     "Projects": "*",
     "SyncMode": "ForceSync",
     "ContinuousDeployment": true,
@@ -18,11 +20,13 @@
   "DeployToCustom": {
     "EnvironmentType": "Custom",
     "EnvironmentName": "MyCustomEnvironment",
-    "Branches": [ "main" ],
+    "Branches": [
+      "main"
+    ],
     "Projects": "*",
     "SyncMode": "ForceSync",
     "ContinuousDeployment": true,
     "runs-on": "ubuntu-latest"
   },
-  "templateSha": "819a838f22a32491fb81ef2f3abad7280d4375b0"
+  "templateSha": "e0f13e643205ab74d7ce163fd6d78ce15df1a1fe"
 }
