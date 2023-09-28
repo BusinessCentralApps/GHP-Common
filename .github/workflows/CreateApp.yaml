@@ -19,17 +19,16 @@ on:
         description: ID range (from..to)
         required: true
       sampleCode:
-        description: Include Sample code?
-        type: boolean
-        default: true
+        description: Include Sample code (Y/N)
+        required: false
+        default: 'Y'
       directCommit:
-        description: Direct Commit?
-        type: boolean
-        default: false
+        description: Direct COMMIT (Y/N)
+        required: false
+        default: "N"
       useGhTokenWorkflow:
-        description: Use GhTokenWorkflow for PR/Commit?
+        description: Use GhTokenWorkflow for Pull Request/COMMIT
         type: boolean
-        default: false
 
 permissions:
   contents: write
@@ -45,39 +44,27 @@ env:
 
 jobs:
   CreateApp:
-    needs: [ ]
     runs-on: [ ubuntu-latest ]
     steps:
-      - name: Input
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          Write-Host "Inputs:"
-          $eventPath = Get-Content -Encoding UTF8 -Path $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json
-          $eventPath.inputs.psObject.Properties | Sort-Object { $_.Name } | ForEach-Object {
-            $property = $_.Name
-            $value = $eventPath.inputs."$property"
-            Write-Host "- $property = '$value'"
-          }
-
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Initialize the workflow
         id: init
-        uses: freddydk/AL-Go/Actions/WorkflowInitialize@custom
+        uses: freddydk/AL-Go/Actions/WorkflowInitialize@main
         with:
           shell: pwsh
           eventId: "DO0092"
 
       - name: Read settings
-        uses: freddydk/AL-Go/Actions/ReadSettings@custom
+        uses: freddydk/AL-Go/Actions/ReadSettings@main
         with:
           shell: pwsh
           get: type
 
       - name: Read secrets
         id: ReadSecrets
-        uses: freddydk/AL-Go/Actions/ReadSecrets@custom
+        uses: freddydk/AL-Go/Actions/ReadSecrets@main
         with:
           shell: pwsh
           gitHubSecrets: ${{ toJson(secrets) }}
@@ -85,7 +72,7 @@ jobs:
           useGhTokenWorkflowForPush: '${{ github.event.inputs.useGhTokenWorkflow }}'
 
       - name: Creating a new app
-        uses: freddydk/AL-Go/Actions/CreateApp@custom
+        uses: freddydk/AL-Go/Actions/CreateApp@main
         with:
           shell: pwsh
           token: ${{ steps.ReadSecrets.outputs.TokenForPush }}
@@ -100,7 +87,7 @@ jobs:
 
       - name: Finalize the workflow
         if: always()
-        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@custom
+        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@main
         with:
           shell: pwsh
           eventId: "DO0092"
