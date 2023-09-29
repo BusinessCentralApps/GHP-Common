@@ -1,6 +1,6 @@
 {
   "type": "PTE",
-  "templateUrl": "https://github.com/freddydk/AL-Go@custom",
+  "templateUrl": "https://github.com/freddydk/AL-Go@main",
   "DoNotUseCdnForArtifacts": true,
   "useCompilerFolder": true,
   "doNotPublishApps": true,
@@ -28,5 +28,5 @@
     "ContinuousDeployment": true,
     "runs-on": "ubuntu-latest"
   },
-  "templateSha": "e0f13e643205ab74d7ce163fd6d78ce15df1a1fe"
+  "templateSha": "bac7fabe160dcc1832c056f198b61645df70c98e"
 }

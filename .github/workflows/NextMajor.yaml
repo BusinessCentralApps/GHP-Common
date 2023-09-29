@@ -17,7 +17,6 @@ env:
 
 jobs:
   Initialization:
-    needs: [ ]
     runs-on: [ ubuntu-latest ]
     outputs:
       telemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
@@ -35,14 +34,14 @@ jobs:
 
       - name: Initialize the workflow
         id: init
-        uses: freddydk/AL-Go/Actions/WorkflowInitialize@custom
+        uses: freddydk/AL-Go/Actions/WorkflowInitialize@main
         with:
           shell: pwsh
           eventId: "DO0099"
 
       - name: Read settings
         id: ReadSettings
-        uses: freddydk/AL-Go/Actions/ReadSettings@custom
+        uses: freddydk/AL-Go/Actions/ReadSettings@main
         with:
           shell: pwsh
 
@@ -53,7 +52,7 @@ jobs:
 
       - name: Determine Projects To Build
         id: determineProjectsToBuild
-        uses: freddydk/AL-Go/Actions/DetermineProjectsToBuild@custom
+        uses: freddydk/AL-Go/Actions/DetermineProjectsToBuild@main
         with:
           shell: pwsh
           maxBuildDepth: ${{ env.workflowDepth }}
@@ -76,21 +75,21 @@ jobs:
       projectName: ${{ matrix.projectName }}
       buildMode: ${{ matrix.buildMode }}
       projectDependenciesJson: ${{ needs.Initialization.outputs.projectDependenciesJson }}
-      secrets: 'licenseFileUrl,insiderSasToken,codeSignCertificateUrl,*codeSignCertificatePassword,keyVaultCertificateUrl,*keyVaultCertificatePassword,keyVaultClientId,gitHubPackagesContext,applicationInsightsConnectionString'
+      secrets: 'licenseFileUrl,codeSignCertificateUrl,*codeSignCertificatePassword,keyVaultCertificateUrl,*keyVaultCertificatePassword,keyVaultClientId,gitHubPackagesContext,applicationInsightsConnectionString'
       publishThisBuildArtifacts: ${{ needs.Initialization.outputs.workflowDepth > 1 }}
       artifactsNameSuffix: 'NextMajor'
 
   PostProcess:
-    needs: [ Initialization, Build ]
     if: always()
     runs-on: [ ubuntu-latest ]
+    needs: [ Initialization, Build ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Finalize the workflow
         id: PostProcess
-        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@custom
+        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@main
         with:
           shell: pwsh
           eventId: "DO0099"
