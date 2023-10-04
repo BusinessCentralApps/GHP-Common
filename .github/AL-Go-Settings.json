@@ -1,6 +1,6 @@
 {
   "type": "PTE",
-  "templateUrl": "https://github.com/freddydk/AL-Go@deployurl",
+  "templateUrl": "https://github.com/freddydk/AL-Go@CheckForUpdates",
   "DoNotUseCdnForArtifacts": true,
   "useCompilerFolder": true,
   "doNotPublishApps": true,

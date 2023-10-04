@@ -13,16 +13,17 @@ on:
         description: Name of the online environment
         required: true
       reUseExistingEnvironment:
-        description: Reuse environment if it exists
-        required: false
-        default: 'N'
-      directCommit:
-        description: Direct COMMIT (Y/N)
-        required: false
-        default: 'N'
-      useGhTokenWorkflow:
-        description: Use GhTokenWorkflow for Pull Request/COMMIT
+        description: Reuse environment if it exists?
         type: boolean
+        default: false
+      directCommit:
+        description: Direct Commit?
+        type: boolean
+        default: false
+      useGhTokenWorkflow:
+        description: Use GhTokenWorkflow for PR/Commit?
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -38,6 +39,7 @@ env:
 
 jobs:
   Initialization:
+    needs: [ ]
     runs-on: [ ubuntu-latest ]
     outputs:
       deviceCode: ${{ steps.authenticate.outputs.deviceCode }}
@@ -45,25 +47,36 @@ jobs:
       githubRunner: ${{ steps.ReadSettings.outputs.GitHubRunnerJson }}
       githubRunnerShell: ${{ steps.ReadSettings.outputs.GitHubRunnerShell }}
     steps:
+      - name: Input
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          Write-Host "Inputs:"
+          $eventPath = Get-Content -Encoding UTF8 -Path $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json
+          $eventPath.inputs.psObject.Properties | Sort-Object { $_.Name } | ForEach-Object {
+            $property = $_.Name
+            $value = $eventPath.inputs."$property"
+            Write-Host "- $property = '$value'"
+          }
+
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Initialize the workflow
         id: init
-        uses: freddydk/AL-Go/Actions/WorkflowInitialize@deployurl
+        uses: freddydk/AL-Go/Actions/WorkflowInitialize@CheckForUpdates
         with:
           shell: pwsh
           eventId: "DO0093"
 
       - name: Read settings
         id: ReadSettings
-        uses: freddydk/AL-Go/Actions/ReadSettings@deployurl
+        uses: freddydk/AL-Go/Actions/ReadSettings@CheckForUpdates
         with:
           shell: pwsh
 
       - name: Read secrets
         id: ReadSecrets
-        uses: freddydk/AL-Go/Actions/ReadSecrets@deployurl
+        uses: freddydk/AL-Go/Actions/ReadSecrets@CheckForUpdates
         with:
           shell: pwsh
           gitHubSecrets: ${{ toJson(secrets) }}
@@ -82,7 +95,7 @@ jobs:
             Write-Host "AdminCenterApiCredentials not provided, initiating Device Code flow"
             $ALGoHelperPath = "$([System.IO.Path]::GetTempFileName()).ps1"
             $webClient = New-Object System.Net.WebClient
-            $webClient.DownloadFile('https://raw.githubusercontent.com/freddydk/AL-Go/deployurl/Actions/AL-Go-Helper.ps1', $ALGoHelperPath)
+            $webClient.DownloadFile('https://raw.githubusercontent.com/freddydk/AL-Go/CheckForUpdates/Actions/AL-Go-Helper.ps1', $ALGoHelperPath)
             . $ALGoHelperPath
             DownloadAndImportBcContainerHelper
             $authContext = New-BcAuthContext -includeDeviceLogin -deviceLoginTimeout ([TimeSpan]::FromSeconds(0))
@@ -91,12 +104,12 @@ jobs:
           }
 
   CreateDevelopmentEnvironment:
+    needs: [ Initialization ]
     runs-on: ${{ fromJson(needs.Initialization.outputs.githubRunner) }}
     defaults:
       run:
         shell: ${{ needs.Initialization.outputs.githubRunnerShell }}
     name: Create Development Environment
-    needs: [ Initialization ]
     env:
       deviceCode: ${{ needs.Initialization.outputs.deviceCode }}
     steps:
@@ -104,13 +117,13 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Read settings
-        uses: freddydk/AL-Go/Actions/ReadSettings@deployurl
+        uses: freddydk/AL-Go/Actions/ReadSettings@CheckForUpdates
         with:
           shell: pwsh
 
       - name: Read secrets
         id: ReadSecrets
-        uses: freddydk/AL-Go/Actions/ReadSecrets@deployurl
+        uses: freddydk/AL-Go/Actions/ReadSecrets@CheckForUpdates
         with:
           shell: pwsh
           gitHubSecrets: ${{ toJson(secrets) }}
@@ -129,7 +142,7 @@ jobs:
           Add-Content -Encoding UTF8 -Path $env:GITHUB_OUTPUT -value "adminCenterApiCredentials=$adminCenterApiCredentials"
 
       - name: Create Development Environment
-        uses: freddydk/AL-Go/Actions/CreateDevelopmentEnvironment@deployurl
+        uses: freddydk/AL-Go/Actions/CreateDevelopmentEnvironment@CheckForUpdates
         with:
           shell: pwsh
           token: ${{ steps.ReadSecrets.outputs.TokenForPush }}
@@ -142,7 +155,7 @@ jobs:
 
       - name: Finalize the workflow
         if: always()
-        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@deployurl
+        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@CheckForUpdates
         with:
           shell: pwsh
           eventId: "DO0093"

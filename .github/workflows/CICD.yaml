@@ -24,6 +24,7 @@ env:
 
 jobs:
   Initialization:
+    needs: [ ]
     runs-on: [ ubuntu-latest ]
     outputs:
       telemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
@@ -45,14 +46,14 @@ jobs:
 
       - name: Initialize the workflow
         id: init
-        uses: freddydk/AL-Go/Actions/WorkflowInitialize@deployurl
+        uses: freddydk/AL-Go/Actions/WorkflowInitialize@CheckForUpdates
         with:
           shell: pwsh
           eventId: "DO0091"
 
       - name: Read settings
         id: ReadSettings
-        uses: freddydk/AL-Go/Actions/ReadSettings@deployurl
+        uses: freddydk/AL-Go/Actions/ReadSettings@CheckForUpdates
         with:
           shell: pwsh
           get: type
@@ -64,22 +65,22 @@ jobs:
 
       - name: Determine Projects To Build
         id: determineProjectsToBuild
-        uses: freddydk/AL-Go/Actions/DetermineProjectsToBuild@deployurl
+        uses: freddydk/AL-Go/Actions/DetermineProjectsToBuild@CheckForUpdates
         with:
           shell: pwsh
           maxBuildDepth: ${{ env.workflowDepth }}
 
       - name: Determine Delivery Target Secrets
         id: DetermineDeliveryTargetSecrets
-        uses: freddydk/AL-Go/Actions/DetermineDeliveryTargets@deployurl
+        uses: freddydk/AL-Go/Actions/DetermineDeliveryTargets@CheckForUpdates
         with:
           shell: pwsh
           projectsJson: '${{ steps.determineProjectsToBuild.outputs.ProjectsJson }}'
-          checkContextSecrets: 'N'
+          checkContextSecrets: 'false'
 
       - name: Read secrets
         id: ReadSecrets
-        uses: freddydk/AL-Go/Actions/ReadSecrets@deployurl
+        uses: freddydk/AL-Go/Actions/ReadSecrets@CheckForUpdates
         with:
           shell: pwsh
           gitHubSecrets: ${{ toJson(secrets) }}
@@ -87,7 +88,7 @@ jobs:
 
       - name: Determine Delivery Targets
         id: DetermineDeliveryTargets
-        uses: freddydk/AL-Go/Actions/DetermineDeliveryTargets@deployurl
+        uses: freddydk/AL-Go/Actions/DetermineDeliveryTargets@CheckForUpdates
         env:
           Secrets: '${{ steps.ReadSecrets.outputs.Secrets }}'
         with:
@@ -97,7 +98,7 @@ jobs:
 
       - name: Determine Deployment Environments
         id: DetermineDeploymentEnvironments
-        uses: freddydk/AL-Go/Actions/DetermineDeploymentEnvironments@deployurl
+        uses: freddydk/AL-Go/Actions/DetermineDeploymentEnvironments@CheckForUpdates
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
@@ -106,24 +107,24 @@ jobs:
           type: 'CD'
 
   CheckForUpdates:
-    runs-on: [ ubuntu-latest ]
     needs: [ Initialization ]
+    runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Read settings
-        uses: freddydk/AL-Go/Actions/ReadSettings@deployurl
+        uses: freddydk/AL-Go/Actions/ReadSettings@CheckForUpdates
         with:
           shell: pwsh
           get: templateUrl
 
       - name: Check for updates to AL-Go system files
-        uses: freddydk/AL-Go/Actions/CheckForUpdates@deployurl
+        uses: freddydk/AL-Go/Actions/CheckForUpdates@CheckForUpdates
         with:
           shell: pwsh
-          parentTelemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
           templateUrl: ${{ env.templateUrl }}
+          downloadLatest: true
 
   Build:
     needs: [ Initialization ]
@@ -168,7 +169,7 @@ jobs:
           path: '.artifacts'
 
       - name: Read settings
-        uses: freddydk/AL-Go/Actions/ReadSettings@deployurl
+        uses: freddydk/AL-Go/Actions/ReadSettings@CheckForUpdates
         with:
           shell: pwsh
 
@@ -181,7 +182,7 @@ jobs:
 
       - name: Read secrets
         id: ReadSecrets
-        uses: freddydk/AL-Go/Actions/ReadSecrets@deployurl
+        uses: freddydk/AL-Go/Actions/ReadSecrets@CheckForUpdates
         with:
           shell: pwsh
           gitHubSecrets: ${{ toJson(secrets) }}
@@ -189,7 +190,7 @@ jobs:
 
       - name: Deploy
         id: Deploy
-        uses: freddydk/AL-Go/Actions/Deploy@deployurl
+        uses: freddydk/AL-Go/Actions/Deploy@CheckForUpdates
         env:
           Secrets: '${{ steps.ReadSecrets.outputs.Secrets }}'
         with:
@@ -218,20 +219,20 @@ jobs:
           path: '.artifacts'
 
       - name: Read settings
-        uses: freddydk/AL-Go/Actions/ReadSettings@deployurl
+        uses: freddydk/AL-Go/Actions/ReadSettings@CheckForUpdates
         with:
           shell: pwsh
 
       - name: Read secrets
         id: ReadSecrets
-        uses: freddydk/AL-Go/Actions/ReadSecrets@deployurl
+        uses: freddydk/AL-Go/Actions/ReadSecrets@CheckForUpdates
         with:
           shell: pwsh
           gitHubSecrets: ${{ toJson(secrets) }}
           getSecrets: '${{ matrix.deliveryTarget }}Context'
 
       - name: Deliver
-        uses: freddydk/AL-Go/Actions/Deliver@deployurl
+        uses: freddydk/AL-Go/Actions/Deliver@CheckForUpdates
         env:
           Secrets: '${{ steps.ReadSecrets.outputs.Secrets }}'
         with:
@@ -242,16 +243,16 @@ jobs:
           artifacts: '.artifacts'
 
   PostProcess:
+    needs: [ Initialization, Build, Deploy, Deliver ]
     if: (!cancelled())
     runs-on: [ ubuntu-latest ]
-    needs: [ Initialization, Build, Deploy, Deliver ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Finalize the workflow
         id: PostProcess
-        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@deployurl
+        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@CheckForUpdates
         with:
           shell: pwsh
           eventId: "DO0091"
