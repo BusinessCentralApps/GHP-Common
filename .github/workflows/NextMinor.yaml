@@ -17,7 +17,6 @@ env:
 
 jobs:
   Initialization:
-    needs: [ ]
     runs-on: [ ubuntu-latest ]
     outputs:
       telemetryScopeJson: ${{ steps.init.outputs.telemetryScopeJson }}
@@ -35,14 +34,14 @@ jobs:
 
       - name: Initialize the workflow
         id: init
-        uses: freddydk/AL-Go/Actions/WorkflowInitialize@CheckForUpdates
+        uses: freddydk/AL-Go/Actions/WorkflowInitialize@nuget
         with:
           shell: pwsh
           eventId: "DO0100"
 
       - name: Read settings
         id: ReadSettings
-        uses: freddydk/AL-Go/Actions/ReadSettings@CheckForUpdates
+        uses: freddydk/AL-Go/Actions/ReadSettings@nuget
         with:
           shell: pwsh
 
@@ -53,7 +52,7 @@ jobs:
 
       - name: Determine Projects To Build
         id: determineProjectsToBuild
-        uses: freddydk/AL-Go/Actions/DetermineProjectsToBuild@CheckForUpdates
+        uses: freddydk/AL-Go/Actions/DetermineProjectsToBuild@nuget
         with:
           shell: pwsh
           maxBuildDepth: ${{ env.workflowDepth }}
@@ -81,16 +80,16 @@ jobs:
       artifactsNameSuffix: 'NextMinor'
 
   PostProcess:
-    needs: [ Initialization, Build ]
     if: always()
     runs-on: [ ubuntu-latest ]
+    needs: [ Initialization, Build ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Finalize the workflow
         id: PostProcess
-        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@CheckForUpdates
+        uses: freddydk/AL-Go/Actions/WorkflowPostProcess@nuget
         with:
           shell: pwsh
           eventId: "DO0100"
