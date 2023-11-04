@@ -1,6 +1,6 @@
 {
   "type": "PTE",
-  "templateUrl": "https://github.com/freddydk/AL-Go@CheckForUpdates",
+  "templateUrl": "https://github.com/freddydk/AL-Go@nuget",
   "DoNotUseCdnForArtifacts": true,
   "useCompilerFolder": true,
   "doNotPublishApps": true,
@@ -28,5 +28,5 @@
     "ContinuousDeployment": true,
     "runs-on": "ubuntu-latest"
   },
-  "templateSha": "487e390e76603dddeef98fd023478e3970940f1b"
+  "templateSha": "03c67109fd663a21d274bad4c798bfb104002214"
 }
