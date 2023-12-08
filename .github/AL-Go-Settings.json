@@ -1,6 +1,6 @@
 {
   "type": "PTE",
-  "templateUrl": "https://github.com/freddydk/AL-Go@bcptreport",
+  "templateUrl": "https://github.com/mazhelez/AL-Go@fix-incremental-build",
   "DoNotUseCdnForArtifacts": true,
   "useCompilerFolder": true,
   "doNotPublishApps": true,
@@ -28,5 +28,5 @@
     "ContinuousDeployment": true,
     "runs-on": "ubuntu-latest"
   },
-  "templateSha": "03c67109fd663a21d274bad4c798bfb104002214"
+  "templateSha": "0ba00b8d1a6d916fcdfcb36b0c0736927e780b25"
 }
