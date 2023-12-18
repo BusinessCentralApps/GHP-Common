@@ -28,5 +28,5 @@
     "ContinuousDeployment": true,
     "runs-on": "ubuntu-latest"
   },
-  "templateSha": "f3eb2ee6de8784d8e8f6aa363011d7ff9021653b"
+  "templateSha": "679d5cf17e51b1cd558453f429df6e59bf2ce95c"
 }
