@@ -40,7 +40,7 @@ jobs:
           shell: pwsh
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Initialize the workflow
         id: init
@@ -121,6 +121,9 @@ jobs:
     strategy: ${{ fromJson(needs.Initialization.outputs.environmentsMatrixJson) }}
     runs-on: ${{ fromJson(matrix.os) }}
     name: Deploy to ${{ matrix.environment }}
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
     environment:
       name: ${{ matrix.environment }}
       url: ${{ steps.Deploy.outputs.environmentUrl }}
@@ -128,7 +131,7 @@ jobs:
       deviceCode: ${{ needs.Initialization.outputs.deviceCode }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: EnvName
         id: envName
@@ -140,26 +143,45 @@ jobs:
       - name: Read settings
         uses: freddydk/AL-Go/Actions/ReadSettings@nuget
         with:
-          shell: pwsh
+          shell: ${{ matrix.shell }}
+          get: type,powerPlatformSolutionFolder
 
       - name: Read secrets
         id: ReadSecrets
         uses: freddydk/AL-Go/Actions/ReadSecrets@nuget
         with:
-          shell: pwsh
+          shell: ${{ matrix.shell }}
           gitHubSecrets: ${{ toJson(secrets) }}
           getSecrets: '${{ steps.envName.outputs.envName }}-AuthContext,${{ steps.envName.outputs.envName }}_AuthContext,AuthContext,${{ steps.envName.outputs.envName }}-EnvironmentName,${{ steps.envName.outputs.envName }}_EnvironmentName,EnvironmentName,projects'
 
-      - name: Deploy
+      - name: Get Artifacts for deployment
+        uses: freddydk/AL-Go/Actions/GetArtifactsForDeployment@nuget
+        with:
+          shell: pwsh
+          artifactsVersion: ${{ github.event.inputs.appVersion }}
+          artifactsFolder: '.artifacts'
+
+      - name: Deploy to Business Central
         id: Deploy
         uses: freddydk/AL-Go/Actions/Deploy@nuget
         env:
           Secrets: '${{ steps.ReadSecrets.outputs.Secrets }}'
         with:
+          shell: ${{ matrix.shell }}
+          environmentName: ${{ matrix.environment }}
+          artifactsFolder: '.artifacts'
+          type: 'Publish'
+          deploymentEnvironmentsJson: ${{ needs.Initialization.outputs.deploymentEnvironmentsJson }}
+
+      - name: Deploy to Power Platform
+        if: env.type == 'PTE' && env.powerPlatformSolutionFolder != ''
+        uses: freddydk/AL-Go/Actions/DeployPowerPlatform@nuget
+        env:
+          Secrets: '${{ steps.ReadSecrets.outputs.Secrets }}'
+        with:
           shell: pwsh
           environmentName: ${{ matrix.environment }}
-          artifacts: ${{ github.event.inputs.appVersion }}
-          type: 'Publish'
+          artifactsFolder: '.artifacts'
           deploymentEnvironmentsJson: ${{ needs.Initialization.outputs.deploymentEnvironmentsJson }}
 
   PostProcess:
@@ -168,7 +190,7 @@ jobs:
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Finalize the workflow
         id: PostProcess
