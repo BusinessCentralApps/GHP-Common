@@ -1,6 +1,6 @@
 {
   "type": "PTE",
-  "templateUrl": "https://github.com/freddydk/AL-Go@nuget",
+  "templateUrl": "https://github.com/microsoft/AL-Go-PTE@preview",
   "useCompilerFolder": true,
   "doNotPublishApps": true,
   "runs-on": "ubuntu-latest",
@@ -27,5 +27,5 @@
     "ContinuousDeployment": true,
     "runs-on": "ubuntu-latest"
   },
-  "templateSha": "ed79ca7a32ac963ab61a3a385acb859ebaffa54e"
+  "templateSha": "becb26e1f895fb75145bbc10535afb19c09bff5c"
 }
