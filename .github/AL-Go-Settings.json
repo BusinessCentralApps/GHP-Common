@@ -2,7 +2,7 @@
   "type": "PTE",
   "templateUrl": "https://github.com/microsoft/AL-Go-PTE@preview",
   "useCompilerFolder": true,
-  "doNotPublishApps": true,
+  "doNotPublishApps": false,
   "runs-on": "ubuntu-latest",
   "gitHubRunner": "ubuntu-latest",
   "DeployToQA": {
