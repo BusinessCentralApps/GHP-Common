@@ -3,6 +3,7 @@
   "appFolders": [],
   "testFolders": [],
   "bcptTestFolders": [],
+  "generateDependencyArtifact": true,
   "repoVersion": "3.0",
   "artifact": "https://bcartifacts-exdbf9fwegejdqak.b02.azurefd.net/sandbox/24.5.23489.26283/w1"
 }
