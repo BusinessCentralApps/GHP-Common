@@ -6,6 +6,6 @@ pageextension 51000 CustomerListExtLicensing extends "Customer List"
 {
     trigger OnOpenPage();
     begin
-        // Message('App published: Hello world!!');
+        // Message('App published: Hello world!');
     end;
 }
